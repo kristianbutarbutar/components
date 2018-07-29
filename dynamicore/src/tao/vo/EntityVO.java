@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 public class EntityVO {
 	private long id = 1092873654l;
-	private FieldMapperVO[] fields;
+	private ColumnVO[] fields;
 	private String entityCode;
 	private String entityName;
 	private String entityLabel;
@@ -34,10 +34,10 @@ public class EntityVO {
 	public void setId(long id) {
 		this.id = id;
 	}
-	public FieldMapperVO[] getFields() {
+	public ColumnVO[] getFields() {
 		return fields;
 	}
-	public void setFields(FieldMapperVO[] fields) {
+	public void setFields(ColumnVO[] fields) {
 		this.fields = fields;
 	}
 	public String getEntityCode() {
