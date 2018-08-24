@@ -4,9 +4,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class EntityVO {
+public class EntityVO extends FormVO{
 	private long id = 1092873654l;
-	private ColumnVO[] fields;
 	private String entityCode;
 	private String entityName;
 	private String entityLabel;
@@ -20,25 +19,19 @@ public class EntityVO {
 	}
 	public List getFieldsInList(){
 		List l = new ArrayList();
-		if(fields != null){			
-			l = Arrays.stream(fields).collect(Collectors.toList());
+		if(super.getColumns() != null){			
+			l = Arrays.stream(super.getColumns()).collect(Collectors.toList());
 		}
 		return l;
 	}
 	public int getRecordsNo(){
-		return (fields != null ? fields.length:0);
+		return (super.getColumns() != null ? super.getColumns().length:0);
 	}
 	public long getId() {
 		return id;
 	}
 	public void setId(long id) {
 		this.id = id;
-	}
-	public ColumnVO[] getFields() {
-		return fields;
-	}
-	public void setFields(ColumnVO[] fields) {
-		this.fields = fields;
 	}
 	public String getEntityCode() {
 		return entityCode;
