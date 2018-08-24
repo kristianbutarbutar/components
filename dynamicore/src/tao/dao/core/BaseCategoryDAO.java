@@ -29,11 +29,9 @@ public class BaseCategoryDAO extends BaseDAO{
 			ps.setString(8, vo.getUpdatedBy());
 			ps.setDate(9, convertUtilToSql(vo.getUpdatedDate()));
 			ps.execute();closePS();
-			
 			return "success";
-			
 		} catch(Exception e){
-			System.out.println("Error at BaseCategoryDAO.addCategory : " + e.getMessage());
+			logger.info("Error at BaseCategoryDAO.addCategory : " + e.getMessage());
 		}
 		return null;
 	}
@@ -52,11 +50,9 @@ public class BaseCategoryDAO extends BaseDAO{
 			ps.setDate(6, convertUtilToSql(vo.getUpdatedDate()));
 			ps.setString(7, vo.getCid());
 			ps.execute();closePS();
-			
 			return "success";
-			
 		} catch(Exception e){
-			System.out.println("Error at BaseCategoryDAO.addCategory : " + e.getMessage());
+			logger.info("Error at BaseCategoryDAO.addCategory : " + e.getMessage());
 		}
 		return null;
 	}
@@ -69,29 +65,33 @@ public class BaseCategoryDAO extends BaseDAO{
 			ps.setString(1, vo.getCid());			
 			ps.execute();closePS();
 			return "success";
-			
 		} catch(Exception e){
-			System.out.println("Error at BaseCategoryDAO.addCategory : " + e.getMessage());
+			logger.info("Error at BaseCategoryDAO.addCategory : " + e.getMessage());
 		}
 		return null;
 	}
 	
 	public BCategoryVO getCategories(String n){
-		StringBuffer sql = new StringBuffer("");
-		sql.append("select id,name,code,description,parent_id,created_by,created_date,updated_by,updated_date from t_c_category");
-		if(n!=null){
-			if(IsById(n)){
-				sql.append(" where id like ? ");
+		try{
+			StringBuffer sql = new StringBuffer("");
+			sql.append("select id,name,code,description,parent_id,created_by,created_date,updated_by,updated_date from t_c_category");
+			if(n!=null){
+				if(IsById(n)){
+					sql.append(" where id like ? ");
+				}
+				else sql.append(" where name like ? ");
 			}
-			else sql.append(" where name like ? ");
+			ps = setSQLRecords(sql);		
+			if(n!=null){
+				ps.setString(1,"%"+n+"%");
+			}
+			BCategoryVO vo = new BCategoryVO();
+			vo = (BCategoryVO) getRecords(this); closePS();
+			return vo;
+		}catch(SQLException e){
+			logger.info("Error at BaseFormsDAO.getForms : " + e.getMessage());
 		}
-		ps = setSQLRecords(sql);		
-		if(n!=null){
-			sql.append("%"+n+"%");
-		}
-		BCategoryVO vo = new BCategoryVO();
-		vo = (BCategoryVO) getRecords(this); closePS();
-		return vo;
+		return null;
 	}
 	
 	@Override
@@ -117,7 +117,7 @@ public class BaseCategoryDAO extends BaseDAO{
 				return vo;
 			}
 		}catch(SQLException e){
-			System.out.println("SQLException at BaseCategoryDAO.setRecordsInVO : " + e.getMessage());
+			logger.info("SQLException at BaseCategoryDAO.setRecordsInVO : " + e.getMessage());
 		}
 		return null;
 	}

@@ -20,7 +20,7 @@ public class BaseDAO implements BaseDAOIntf{
 			ps = DB.executeSQL(sql);
 			return ps;
 		}catch(Exception e){
-			System.out.println("Error at BaseDAO.addRecord : " + e.getMessage());
+			logger.info("Error at BaseDAO.addRecord : " + e.getMessage());
 		}
 		return null;
 	}
@@ -31,7 +31,7 @@ public class BaseDAO implements BaseDAOIntf{
 			ps = DB.executeSQL(sql);
 			return ps;
 		}catch(Exception e){
-			System.out.println("Error at BaseDAO.updateRecord : " + e.getMessage());
+			logger.info("Error at BaseDAO.updateRecord : " + e.getMessage());
 		}
 		return null;
 	}
@@ -42,7 +42,7 @@ public class BaseDAO implements BaseDAOIntf{
 			ps = DB.executeSQL(sql);
 			return ps;
 		}catch(Exception e){
-			System.out.println("Error at BaseDAO.deleteRecord : " + e.getMessage());
+			logger.info("Error at BaseDAO.deleteRecord : " + e.getMessage());
 		}
 		return null;
 	}
@@ -55,7 +55,7 @@ public class BaseDAO implements BaseDAOIntf{
 			}
 			return true;
 		} catch (Exception e) {
-			System.out.println("Error at BaseDAO.closePS : " + e.getMessage());
+			logger.info("Error at BaseDAO.closePS : " + e.getMessage());
 		}
 		return false;
 	}
@@ -78,7 +78,7 @@ public class BaseDAO implements BaseDAOIntf{
 			ps = DB.executeSQL(sql);
 			return ps;
 		}catch(Exception e){
-			System.out.println("Error at BaseDAO.updateRecord : " + e.getMessage());
+			logger.info("Error at BaseDAO.updateRecord : " + e.getMessage());
 		}
 		return null;
 	}
@@ -90,7 +90,7 @@ public class BaseDAO implements BaseDAOIntf{
 				return dao.setRecordsInVO(ps.executeQuery());
 			}
 		}catch(SQLException e){
-			System.out.println("[SQLException] Error at BaseDAO.getRecords : " + e.getMessage());
+			logger.info("[SQLException] Error at BaseDAO.getRecords : " + e.getMessage());
 		}
 		return null;
 	}

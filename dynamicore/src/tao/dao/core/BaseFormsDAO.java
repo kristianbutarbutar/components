@@ -33,7 +33,7 @@ public class BaseFormsDAO extends BaseDAO {
 			return "success";
 			
 		} catch(Exception e){
-			System.out.println("Error at BaseFormDAO.addForm : " + e.getMessage());
+			logger.info("Error at BaseFormDAO.addForm : " + e.getMessage());
 		}
 		return null;
 	}
@@ -58,7 +58,7 @@ public class BaseFormsDAO extends BaseDAO {
 			return "sucess";
 			
 		} catch(Exception e){
-			System.out.println("Error at BaseFormDAO.addForm : " + e.getMessage());
+			logger.info("Error at BaseFormDAO.addForm : " + e.getMessage());
 		}
 		return null;
 	}
@@ -72,27 +72,32 @@ public class BaseFormsDAO extends BaseDAO {
 			ps.execute();closePS();
 			return "success";
 		} catch(Exception e){
-			System.out.println("Error at BaseFormDAO.addForm : " + e.getMessage());
+			logger.info("Error at BaseFormDAO.addForm : " + e.getMessage());
 		}
 		return null;
 	}
 	
-	public BFormVO getForms(String n){
-		StringBuffer sql = new StringBuffer("");
-		sql.append("select id,code,label,description,url,name,tablename,created_by,created_date,updated_by,updated_date from t_c_forms");
-		if(n!=null){
-			if(IsById(n)){
-				sql.append(" where id like ? ");
+	public BFormVO getForms(String n) {
+		try{
+			StringBuffer sql = new StringBuffer("");
+			sql.append("select id,code,label,description,url,name,tablename,created_by,created_date,updated_by,updated_date from t_c_forms");
+			if(n!=null){
+				if(IsById(n)){
+					sql.append(" where id like ? ");
+				}
+				else sql.append(" where label like ? ");
 			}
-			else sql.append(" where label like ? ");
+			ps = setSQLRecords(sql);		
+			if(n!=null){
+				ps.setString(1, "%"+n+"%");
+			}
+			BFormVO vo = new BFormVO();
+			vo = (BFormVO) getRecords(this); closePS();
+			return vo;
+		}catch(SQLException e){
+			logger.info("Error at BaseFormsDAO.getForms : " + e.getMessage());
 		}
-		ps = setSQLRecords(sql);		
-		if(n!=null){
-			sql.append("%"+n+"%");
-		}
-		BFormVO vo = new BFormVO();
-		vo = (BFormVO) getRecords(this); closePS();
-		return vo;
+		return null;
 	}
 	
 	@Override
@@ -120,7 +125,7 @@ public class BaseFormsDAO extends BaseDAO {
 				return vo;
 			}
 		}catch(SQLException e){
-			System.out.println("SQLException at BaseFormDAO.setRecordsInVO : " + e.getMessage());
+			logger.info("SQLException at BaseFormDAO.setRecordsInVO : " + e.getMessage());
 		}
 		return null;
 	}

@@ -33,7 +33,7 @@ public class BaseListsDAO extends BaseDAO {
 			return "success";
 			
 		} catch(Exception e){
-			System.out.println("Error at BaseListDAO.addList : " + e.getMessage());
+			logger.info("Error at BaseListDAO.addList : " + e.getMessage());
 		}
 		return null;
 	}
@@ -54,11 +54,9 @@ public class BaseListsDAO extends BaseDAO {
 			ps.setDate(6, convertUtilToSql(vo.getUpdatedDate()));
 			ps.setString(7, vo.getCid());
 			ps.execute();closePS();
-						
 			return "success";
-			
 		} catch(Exception e){
-			System.out.println("Error at BaseListDAO.addList : " + e.getMessage());
+			logger.info("Error at BaseListDAO.addList : " + e.getMessage());
 		}
 		return null;
 	}
@@ -72,27 +70,32 @@ public class BaseListsDAO extends BaseDAO {
 			ps.execute();closePS();
 			return "success";			
 		} catch(Exception e){
-			System.out.println("Error at BaseListDAO.addList : " + e.getMessage());
+			logger.info("Error at BaseListDAO.addList : " + e.getMessage());
 		}
 		return null;
 	}
 	
 	public BListVO getLists(String n){
-		StringBuffer sql = new StringBuffer("");
-		sql.append("select id,categoryid,name,code,description,created_by,created_date,updated_by,updated_date from t_c_list");
-		if(n!=null){
-			if(IsById(n)){
-				sql.append(" where id like ? ");
+		try{
+			StringBuffer sql = new StringBuffer("");
+			sql.append("select id,categoryid,name,code,description,created_by,created_date,updated_by,updated_date from t_c_list");
+			if(n!=null){
+				if(IsById(n)){
+					sql.append(" where id like ? ");
+				}
+				else sql.append(" where name like ? ");
 			}
-			else sql.append(" where name like ? ");
+			ps = setSQLRecords(sql);		
+			if(n!=null){
+				ps.setString(1,"%"+n+"%");
+			}
+			BListVO vo = new BListVO();
+			vo = (BListVO) getRecords(this); closePS();
+			return vo;
+		}catch(SQLException e){
+			logger.info("Error at BaseFormsDAO.getForms : " + e.getMessage());
 		}
-		ps = setSQLRecords(sql);		
-		if(n!=null){
-			sql.append("%"+n+"%");
-		}
-		BListVO vo = new BListVO();
-		vo = (BListVO) getRecords(this); closePS();
-		return vo;
+		return null;
 	}
 	
 	@Override
@@ -118,7 +121,7 @@ public class BaseListsDAO extends BaseDAO {
 				return vo;
 			}
 		}catch(SQLException e){
-			System.out.println("SQLException at BaseListsDAO.setRecordsInVO : " + e.getMessage());
+			logger.info("SQLException at BaseListsDAO.setRecordsInVO : " + e.getMessage());
 		}
 		return null;
 	}

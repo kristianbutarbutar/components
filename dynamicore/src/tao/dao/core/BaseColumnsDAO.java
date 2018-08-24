@@ -34,7 +34,7 @@ public class BaseColumnsDAO  extends BaseDAO {
 			return "success";
 			
 		} catch(Exception e){
-			System.out.println("Error at BaseColumnDAO.addColumn : " + e.getMessage());
+			logger.info("Error at BaseColumnDAO.addColumn : " + e.getMessage());
 		}
 		return null;
 	}
@@ -58,7 +58,7 @@ public class BaseColumnsDAO  extends BaseDAO {
 			return "success";
 			
 		} catch(Exception e){
-			System.out.println("Error at BaseColumnDAO.addColumn : " + e.getMessage());
+			logger.info("Error at BaseColumnDAO.addColumn : " + e.getMessage());
 		}
 		return null;
 	}
@@ -72,27 +72,32 @@ public class BaseColumnsDAO  extends BaseDAO {
 			ps.execute();closePS();
 			return "";
 		} catch(Exception e){
-			System.out.println("Error at BaseColumnDAO.addColumn : " + e.getMessage());
+			logger.info("Error at BaseColumnDAO.addColumn : " + e.getMessage());
 		}
 		return null;
 	}
 	
 	public BColumnVO getColumns(String n){
-		StringBuffer sql = new StringBuffer("");
-		sql.append("select id,name,label,description,data_type,value_url,checkregex,created_by,created_date,updated_by,updated_date from t_c_columns");
-		if(n!=null){
-			if(IsById(n)){
-				sql.append(" where id like ? ");
+		try{
+			StringBuffer sql = new StringBuffer("");
+			sql.append("select id,name,label,description,data_type,value_url,checkregex,created_by,created_date,updated_by,updated_date from t_c_columns");
+			if(n!=null){
+				if(IsById(n)){
+					sql.append(" where id like ? ");
+				}
+				else sql.append(" where label like ? ");
 			}
-			else sql.append(" where label like ? ");
+			ps = setSQLRecords(sql);		
+			if(n!=null){
+				ps.setString(1,"%"+n+"%");
+			}
+			BColumnVO vo = new BColumnVO();
+			vo = (BColumnVO) getRecords(this); closePS();
+			return vo;
+		}catch(SQLException e){
+			logger.info("Error at BaseFormsDAO.getForms : " + e.getMessage());
 		}
-		ps = setSQLRecords(sql);		
-		if(n!=null){
-			sql.append("%"+n+"%");
-		}
-		BColumnVO vo = new BColumnVO();
-		vo = (BColumnVO) getRecords(this); closePS();
-		return vo;
+		return null;
 	}
 	
 	@Override
@@ -120,7 +125,7 @@ public class BaseColumnsDAO  extends BaseDAO {
 				return vo;
 			}
 		}catch(SQLException e){
-			System.out.println("SQLException at BaseColumnDAO.setRecordsInVO : " + e.getMessage());
+			logger.info("SQLException at BaseColumnDAO.setRecordsInVO : " + e.getMessage());
 		}
 		return null;
 	}
