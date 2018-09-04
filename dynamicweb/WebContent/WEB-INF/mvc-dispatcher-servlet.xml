@@ -10,11 +10,11 @@
         http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 
 	<mvc:annotation-driven />
+	<context:component-scan base-package="tao.core.ctrl.sys" />
+	<context:component-scan base-package="tao.web.ctrl" />
+	<mvc:resources mapping="/resources/**" location="/resources/"
+		cache-period="31556926" />
 
-	<context:component-scan base-package="toba.com.res.bo" />
-	<context:component-scan base-package="toba.com.ctrl" />
-	<mvc:resources mapping="/resources/**" location="/resources/" cache-period="31556926"/>
-	
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix">
@@ -24,7 +24,7 @@
 			<value>.jsp</value>
 		</property>
 	</bean>
-	<bean id="formVO" class="toba.com.dao.Forms" init-method="initIt"></bean>
+	<!--bean id="formVO" class="toba.com.dao.Forms" init-method="initIt"></bean-->
 </beans>
 
 
