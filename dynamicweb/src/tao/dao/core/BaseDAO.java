@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
@@ -60,6 +61,7 @@ public class BaseDAO implements BaseDAOIntf{
 		return false;
 	}
 	 public java.sql.Date convertUtilToSql(java.util.Date uDate) {
+		 if(uDate==null) uDate = new java.util.Date();
 	     java.sql.Date sDate = new java.sql.Date(uDate.getTime());
 	     return sDate;
 	 }
@@ -101,6 +103,12 @@ public class BaseDAO implements BaseDAOIntf{
 	}
 	 
 	public boolean IsById(String n){
-		return n.matches("^ID:(\\w+)$");
+		boolean b = false;
+		try{
+			b = Pattern.matches("^(ID:)([\\w-]+)$", n); //n.matches("(ID:)(\\w+)");
+		} catch (java.util.regex.PatternSyntaxException e){
+			logger.info("PatternSyntaxException Error at BaseDAO.IsById : " + e.getMessage());
+		}
+		return b;
 	}
 }

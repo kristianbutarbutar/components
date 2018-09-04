@@ -19,7 +19,7 @@ public class BaseColumnsDAO  extends BaseDAO {
 			sql.append("INSERT INTO T_C_COLUMNS(id,name,label,description,data_type,value_url,checkregex,created_by,created_date,updated_by,updated_date)");
 			sql.append("VALUES (?,?,?,?,?,?,?,?,?,?,?)");
 			ps = addRecord(sql);
-			ps.setString(1, vo.getCid());
+			ps.setString(1, genCid("CL"));
 			ps.setString(2, vo.getName());
 			ps.setString(3, vo.getLabel());
 			ps.setString(4, vo.getDescription());
@@ -40,11 +40,13 @@ public class BaseColumnsDAO  extends BaseDAO {
 	}
 	public String updateColumn(BColumnVO vo){
 		try{
+			System.out.println("Comming for the update command. ID = " + vo.getCid());
 			StringBuffer sql = new StringBuffer("");
 			sql.append("UPDATE T_C_COLUMNS ");
 			sql.append("SET name=?,label=?,description=?,data_type=?,value_url=?,checkregex=?,updated_by=?,updated_date=? ");
 			sql.append("WHERE ID=? ");
 			ps = updateRecord(sql);
+			
 			ps.setString(1, vo.getName());
 			ps.setString(2, vo.getLabel());
 			ps.setString(3, vo.getDescription());
@@ -57,10 +59,14 @@ public class BaseColumnsDAO  extends BaseDAO {
 			ps.execute();closePS();
 			return "success";
 			
-		} catch(Exception e){
+		} catch(SQLException e){
+			System.out.println("SQL Exception Error at BaseColumnDAO.addColumn : " + e.getMessage());
+			logger.info("Error at BaseColumnDAO.addColumn : " + e.getMessage());
+		}catch(Exception e){
+			System.out.println("Error at BaseColumnDAO.addColumn : " + e.getMessage());
 			logger.info("Error at BaseColumnDAO.addColumn : " + e.getMessage());
 		}
-		return null;
+		return "failed";
 	}
 	public String deleteColumn(BColumnVO vo){
 		try{
@@ -70,28 +76,42 @@ public class BaseColumnsDAO  extends BaseDAO {
 			ps = deleteRecord(sql);
 			ps.setString(1, vo.getCid());
 			ps.execute();closePS();
-			return "";
+			return "success";
 		} catch(Exception e){
 			logger.info("Error at BaseColumnDAO.addColumn : " + e.getMessage());
 		}
-		return null;
+		return "failed";
 	}
 	
-	public BColumnVO getColumns(String n){
+	public BColumnVO getColumns(String nm, String lb){
 		try{
-			System.out.println("Isi N adalah " + n);
-			
+			String n = null; String l = null;
+			if(nm.equalsIgnoreCase("null")) n = null; else n = nm;
+			if(lb.equalsIgnoreCase("null")) l = null; else l = lb;
 			StringBuffer sql = new StringBuffer("");
 			sql.append("select id,name,label,description,data_type,value_url,checkregex,created_by,created_date,updated_by,updated_date from t_c_columns");
-			if(n!=null){
+
+			if(n!=null || l!=null){
 				if(IsById(n)){
 					sql.append(" where id like ? ");
+					n = n.substring(4);
+				} else {
+					String w = "";
+					if(n!=null) w = " name like ? ";
+					if(l!=null) {
+						if(!w.equalsIgnoreCase("")) w+=" or ";
+							w += " label like ? ";
+					}
+					
+					sql.append(" where " + w);
 				}
-				else sql.append(" where label like ? ");
 			}
+
 			ps = setSQLRecords(sql);		
-			if(n!=null && ps!=null){
-				ps.setString(1,"%"+n+"%");
+			if((n!=null || l!=null) && ps!=null){
+				int i = 1;
+				if(n!=null) ps.setString(i++,"%"+n+"%");
+				if(l!=null) ps.setString(i++,"%"+l+"%");
 			}
 			BColumnVO vo = new BColumnVO();
 			vo = (BColumnVO) getRecords(this); closePS();

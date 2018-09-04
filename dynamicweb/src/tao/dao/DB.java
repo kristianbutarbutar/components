@@ -48,6 +48,7 @@ public class DB {
 	
 	public static PreparedStatement executeSQL(StringBuffer sql){
 		try{
+			System.out.println("SQL Statement : " + sql.toString());
 			PreparedStatement ps =  DB.getConnection().prepareStatement(sql.toString());
 			return ps;
 		}catch(SQLException e){
